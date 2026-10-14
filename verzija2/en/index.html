@@ -130,6 +130,7 @@
       </ol>
       <div class="programme__foot">
         <nav class="programme__lang" aria-label="Language"><a href="../" hreflang="hr" lang="hr" data-lang="hr">Hrvatski</a><a href="../en/" hreflang="en" lang="en" data-lang="en" aria-current="page" class="on">English</a><a href="../de/" hreflang="de" lang="de" data-lang="de">Deutsch</a></nav>
+        <button class="mono tune-link" data-tuner aria-label="Open the cello tuner">Tuning · A = <b data-tuner-a>442</b> Hz</button>
         <a class="mono" href="mailto:info@monikaleskovar.com">info@monikaleskovar.com</a>
       </div>
     </div>
@@ -167,6 +168,7 @@
 
       <dl class="hero__facts mono">
         <div><dt>Instrument</dt><dd>Vincenzo Postiglione, Naples 1884</dd></div>
+        <div class="hero__tune"><dt>Tuning</dt><dd><button class="tune-link" data-tuner aria-label="Open the cello tuner">A = <b data-tuner-a>442</b> Hz</button></dd></div>
       </dl>
 
       <a class="hero__scroll mono" href="#statement">
@@ -590,7 +592,10 @@
     <div class="wrap foot__inner mono">
       <span>© 2026 Monika Leskovar — All rights reserved.</span>
       <span class="foot__fine">Fine</span>
-      <a href="#top">Back to start</a>
+      <span class="foot__end">
+        <button class="tune-link" data-tuner aria-label="Open the cello tuner">A = <b data-tuner-a>442</b> Hz</button>
+        <a href="#top">Back to start</a>
+      </span>
     </div>
   </footer>
 
@@ -605,6 +610,52 @@
       <button id="lbPrev" aria-label="←">←</button>
       <a id="lbDownload" href="#" download>Download original ↓</a>
       <button id="lbNext" aria-label="→">→</button>
+    </div>
+  </div>
+
+  <!-- Accordatura: cello tuner (reference tones + microphone pitch detection, all in the browser) -->
+  <div class="tuner" id="tuner" role="dialog" aria-modal="true" aria-labelledby="tuTitle" hidden>
+    <div class="tu__top mono">
+      <span id="tuTitle">Accordatura — Cello</span>
+      <button class="tu__close" id="tuClose" aria-label="Close">✕</button>
+    </div>
+
+    <div class="tu__stage">
+      <div class="tu__read" aria-live="polite">
+        <span class="tu__num" id="tuNum">&nbsp;</span>
+        <span class="tu__note" id="tuNote">—</span>
+        <span class="tu__cents mono" id="tuCents">&nbsp;</span>
+      </div>
+      <div class="tu__gauge" aria-hidden="true">
+        <span class="tu__scale"></span>
+        <span class="tu__needle" id="tuNeedle"></span>
+        <span class="tu__lab mono"><i>−50</i><i>0</i><i>+50</i></span>
+      </div>
+      <div class="tu__strings">
+        <canvas id="tuCanvas" aria-hidden="true"></canvas>
+        <div class="tu__keys" id="tuKeys">
+          <button data-s="0" aria-label="String IV — C, hear the pitch"><b>C</b><i class="mono">IV</i></button>
+          <button data-s="1" aria-label="String III — G, hear the pitch"><b>G</b><i class="mono">III</i></button>
+          <button data-s="2" aria-label="String II — D, hear the pitch"><b>D</b><i class="mono">II</i></button>
+          <button data-s="3" aria-label="String I — A, hear the pitch"><b>A</b><i class="mono">I</i></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tu__bottom">
+      <div class="tu__mic">
+        <button class="pill tu__micbtn" id="tuMic" aria-pressed="false"><span class="tu__dot" aria-hidden="true"></span><span id="tuMicLabel">Turn on microphone</span></button>
+        <p class="tu__status" id="tuStatus">Tap a string to hear it, or turn on the microphone</p>
+      </div>
+      <div class="tu__set mono">
+        <div class="tu__ref">
+          <button id="tuDown" aria-label="A −1 Hz">−</button>
+          <span>A = <b id="tuRef">442</b> Hz</span>
+          <button id="tuUp" aria-label="A +1 Hz">+</button>
+        </div>
+        <button class="tu__fifths" id="tuFifths" aria-pressed="true">Fifths: <b id="tuFifthsVal">pure</b></button>
+      </div>
+      <p class="tu__privacy">Sound is processed only in your browser and is never sent anywhere.</p>
     </div>
   </div>
 

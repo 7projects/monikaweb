@@ -341,6 +341,315 @@
   })();
 
   /* ======================================================================
+     Accordatura — cello tuner
+     Reference tones are synthesised; the microphone is analysed locally
+     (McLeod pitch method). The strings swell at the real beat rate
+     |f − target|, so they calm down as the string comes into tune.
+     ====================================================================== */
+  (() => {
+    const dlg = $("#tuner");
+    if (!dlg) return;
+    const canvas = $("#tuCanvas"), ctx = canvas.getContext("2d");
+    const keys = $$("#tuKeys button");
+    const NOTES = t("tuner.notes");
+    const ROMAN = ["IV", "III", "II", "I"];
+    const LETTER = ["C", "G", "D", "A"];
+    const OCT = [2, 2, 3, 3];
+    const fmt = (n, d) => n.toLocaleString(lang, { minimumFractionDigits: d, maximumFractionDigits: d });
+
+    let ref = Math.max(415, Math.min(446, parseInt(read("tunerA"), 10) || 442));
+    let pure = read("tunerFifths") !== "tempered";
+    let ac = null, stream = null, analyser = null, buf = null, raf = 0, opener = null;
+    let tone = null, toneString = -1;
+    let freq = 0, cents = 0, shown = 0, beat = 0, active = -1, lastHit = 0;
+    const hist = [];
+
+    // A3 = ref / 2; the lower strings are a fifth apart, pure (3:2) or equal-tempered
+    function targets() {
+      const a = ref / 2, k = pure ? 2 / 3 : Math.pow(2, -7 / 12);
+      return [a * k * k * k, a * k * k, a * k, a];
+    }
+
+    function showRef() {
+      $("#tuRef").textContent = ref;
+      $$("[data-tuner-a]").forEach((b) => { b.textContent = ref; });
+      $("#tuFifthsVal").textContent = t(pure ? "tuner.pure" : "tuner.tempered");
+      $("#tuFifths").setAttribute("aria-pressed", String(pure));
+      if (tone) { tone.osc.frequency.setTargetAtTime(targets()[toneString], ac.currentTime, 0.02); if (!freq) showString(toneString); }
+    }
+
+    function audioCtx() {
+      if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)();
+      if (ac.state === "suspended") ac.resume();
+      return ac;
+    }
+    const quiet = () => { const p = $("#player"); if (p && !p.paused) p.pause(); };
+    const status = (s) => { $("#tuStatus").textContent = s; };
+
+    /* ---- reference tone: a soft bowed-string timbre ---- */
+    let wave = null;
+    function play(i) {
+      const was = toneString;
+      stopTone();
+      if (was === i) return;
+      const c = audioCtx();
+      quiet();
+      if (!wave) {
+        const h = [0, 1, .62, .48, .36, .3, .22, .17, .13, .1, .08, .06, .05, .04];
+        wave = c.createPeriodicWave(new Float32Array(h.length), Float32Array.from(h));
+      }
+      const osc = c.createOscillator(), lp = c.createBiquadFilter(), g = c.createGain(), now = c.currentTime;
+      osc.setPeriodicWave(wave);
+      osc.frequency.value = targets()[i];
+      lp.type = "lowpass"; lp.frequency.value = 2200; lp.Q.value = .5;
+      g.gain.setValueAtTime(0, now);
+      g.gain.linearRampToValueAtTime(.16, now + .35);
+      g.gain.setValueAtTime(.16, now + 3.2);
+      g.gain.linearRampToValueAtTime(0, now + 4.2);
+      osc.connect(lp).connect(g).connect(c.destination);
+      osc.start(now); osc.stop(now + 4.3);
+      tone = { osc, g };
+      toneString = i;
+      if (!freq) showString(i);
+      osc.onended = () => { if (tone && tone.osc === osc) { tone = null; toneString = -1; paintKeys(); if (!freq) reset(); } };
+      paintKeys();
+      loop();
+    }
+    function stopTone() {
+      if (!tone) return;
+      const now = ac.currentTime;
+      tone.g.gain.cancelScheduledValues(now);
+      tone.g.gain.setTargetAtTime(0, now, .06);
+      tone.osc.stop(now + .3);
+      tone = null; toneString = -1;
+      paintKeys();
+      if (!freq) reset();
+    }
+    // while a reference tone sounds (and the microphone hears nothing), name it
+    function showString(i) {
+      dlg.classList.add("ref");
+      $("#tuNote").textContent = LETTER[i];
+      $("#tuNum").textContent = `${t("tuner.string")} ${ROMAN[i]} · ${LETTER[i]}${OCT[i]}`;
+      $("#tuCents").textContent = `${fmt(targets()[i], 1)} Hz`;
+    }
+    function paintKeys() {
+      keys.forEach((k, i) => {
+        k.classList.toggle("on", i === toneString);
+        k.classList.toggle("hit", i === active && i !== toneString);
+      });
+    }
+
+    /* ---- microphone ---- */
+    async function micOn() {
+      const c = audioCtx();
+      quiet();
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+      } catch (e) {
+        status(t("tuner.denied"));
+        return;
+      }
+      if (dlg.hidden) { stream.getTracks().forEach((tr) => tr.stop()); stream = null; return; }
+      analyser = c.createAnalyser();
+      analyser.fftSize = 4096;
+      buf = new Float32Array(analyser.fftSize);
+      c.createMediaStreamSource(stream).connect(analyser);
+      $("#tuMic").setAttribute("aria-pressed", "true");
+      $("#tuMicLabel").textContent = t("tuner.micOff");
+      status(t("tuner.listen"));
+      loop();
+    }
+    function micOff() {
+      if (stream) stream.getTracks().forEach((tr) => tr.stop());
+      stream = null; analyser = null;
+      $("#tuMic").setAttribute("aria-pressed", "false");
+      $("#tuMicLabel").textContent = t("tuner.mic");
+      status(t("tuner.idle"));
+      reset();
+    }
+
+    // McLeod pitch method on a 2× decimated frame (the low C at 65 Hz needs a long window)
+    const half = new Float32Array(2048), nsdf = new Float32Array(1001);
+    function detect() {
+      analyser.getFloatTimeDomainData(buf);
+      let rms = 0;
+      for (let i = 0; i < 2048; i++) { const v = (buf[2 * i] + buf[2 * i + 1]) / 2; half[i] = v; rms += v * v; }
+      if (Math.sqrt(rms / 2048) < .006) return 0;
+      const sr = ac.sampleRate / 2, maxT = Math.min(1000, Math.ceil(sr / 55)), minT = Math.floor(sr / 1100), W = 2048 - maxT;
+      for (let tau = minT; tau <= maxT; tau++) {
+        let acf = 0, m = 0;
+        for (let i = 0; i < W; i++) { const a = half[i], b = half[i + tau]; acf += a * b; m += a * a + b * b; }
+        nsdf[tau] = m ? 2 * acf / m : 0;
+      }
+      // key maxima: the highest point of every positive lobe after the first zero crossing
+      const peaks = [];
+      let tau = minT;
+      while (tau < maxT && nsdf[tau] > 0) tau++;
+      while (tau < maxT) {
+        while (tau < maxT && nsdf[tau] <= 0) tau++;
+        let best = tau;
+        while (tau < maxT && nsdf[tau] > 0) { if (nsdf[tau] > nsdf[best]) best = tau; tau++; }
+        if (best < maxT && nsdf[best] > 0) peaks.push(best);
+      }
+      if (!peaks.length) return 0;
+      const top = Math.max(...peaks.map((p) => nsdf[p]));
+      if (top < .8) return 0;
+      const p = peaks.find((q) => nsdf[q] >= top * .9);
+      const a = nsdf[p - 1], b = nsdf[p], c = nsdf[p + 1], d = a - 2 * b + c;
+      return sr / (p + (d ? (a - c) / (2 * d) : 0));
+    }
+
+    function reset() {
+      hist.length = 0; freq = 0; active = -1;
+      dlg.classList.remove("live", "near", "tuned", "ref");
+      $("#tuNote").textContent = "—";
+      $("#tuNum").innerHTML = "&nbsp;";
+      $("#tuCents").innerHTML = "&nbsp;";
+      if (toneString >= 0) showString(toneString);
+      paintKeys();
+    }
+
+    function listen() {
+      const f = detect(), now = performance.now();
+      if (f) {
+        hist.push(f); if (hist.length > 5) hist.shift();
+        freq = [...hist].sort((x, y) => x - y)[hist.length >> 1];
+        lastHit = now;
+      } else {
+        if (freq && now - lastHit > 700) reset();
+        return;
+      }
+
+      const T = targets();
+      const dev = T.map((x) => 1200 * Math.log2(freq / x));
+      let s = dev.reduce((bi, v, i) => Math.abs(v) < Math.abs(dev[bi]) ? i : bi, 0);
+      let name, num, target;
+      if (Math.abs(dev[s]) <= 150) {
+        cents = dev[s]; target = T[s];
+        name = LETTER[s]; num = `${t("tuner.string")} ${ROMAN[s]} · ${LETTER[s]}${OCT[s]}`;
+      } else {
+        // not an open string: show the nearest chromatic note
+        s = -1;
+        const n = 12 * Math.log2(freq / ref) + 57, r = Math.round(n);
+        cents = (n - r) * 100; target = freq / Math.pow(2, cents / 1200);
+        name = NOTES[((r % 12) + 12) % 12]; num = `${name}${Math.floor(r / 12)}`;
+      }
+      if (s !== active || !dlg.classList.contains("live")) shown = cents;
+      active = s;
+      shown += (cents - shown) * .35;
+      beat = Math.abs(freq - target);
+      const c = Math.round(shown), ok = Math.abs(shown) < 3;
+      dlg.classList.remove("ref");
+      dlg.classList.add("live");
+      dlg.classList.toggle("tuned", ok);
+      dlg.classList.toggle("near", !ok && Math.abs(shown) < 12);
+      $("#tuNote").textContent = name;
+      $("#tuNum").textContent = num;
+      $("#tuCents").textContent = `${ok ? t("tuner.inTune") : (c > 0 ? "+" : c < 0 ? "−" : "±") + Math.abs(c) + " ¢"}  ·  ${fmt(freq, 1)} Hz`;
+      $("#tuNeedle").style.transform = `translateX(${(Math.max(-50, Math.min(50, shown)) / 100 * $(".tu__gauge").clientWidth).toFixed(1)}px)`;
+      paintKeys();
+    }
+
+    /* ---- the four strings ---- */
+    let W = 0, H = 0, dpr = 1;
+    const amp = [0, 0, 0, 0];
+    function size() {
+      dpr = Math.min(2, devicePixelRatio || 1);
+      W = canvas.clientWidth; H = canvas.clientHeight;
+      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+    }
+    function draw(now) {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, W, H);
+      const ts = now / 1000, tuned = dlg.classList.contains("tuned");
+      for (let i = 0; i < 4; i++) {
+        const x = W * (i + .5) / 4, thick = 2.6 - i * .45;
+        const sounding = i === toneString || (i === active && freq > 0);
+        amp[i] += ((sounding ? 1 : 0) - amp[i]) * .12;
+        let a = amp[i] * Math.min(W / 16, 14);
+        if (!reduce && i === active && freq && !tuned) a *= .45 + .55 * Math.abs(Math.cos(Math.PI * Math.min(8, beat) * ts));
+        const hot = i === toneString || (i === active && tuned);
+        if (a > .2) {
+          // a bowed string blurs into a lens; its width is the vibration amplitude
+          ctx.beginPath();
+          for (let k = 0; k <= 40; k++) ctx.lineTo(x + a * Math.sin(Math.PI * k / 40), H * k / 40);
+          for (let k = 40; k >= 0; k--) ctx.lineTo(x - a * Math.sin(Math.PI * k / 40), H * k / 40);
+          ctx.fillStyle = hot ? "rgba(234,174,110,.22)" : "rgba(236,233,226,.1)";
+          ctx.fill();
+          if (!reduce) {
+            const w = Math.sin(ts * 47 + i) * a;
+            ctx.beginPath();
+            for (let k = 0; k <= 40; k++) ctx.lineTo(x + w * Math.sin(Math.PI * k / 40), H * k / 40);
+            ctx.strokeStyle = hot ? "rgba(234,174,110,.55)" : "rgba(236,233,226,.35)";
+            ctx.lineWidth = thick * .7; ctx.stroke();
+          }
+        }
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H);
+        ctx.strokeStyle = hot ? "#eaae6e" : amp[i] > .05 ? "rgba(236,233,226,.75)" : "rgba(236,233,226,.32)";
+        ctx.lineWidth = thick; ctx.stroke();
+      }
+    }
+    function loop() {
+      if (raf) return;
+      const step = (now) => {
+        raf = 0;
+        if (dlg.hidden) return;
+        if (analyser) listen();
+        draw(now);
+        if (analyser || tone || amp.some((v) => v > .01)) raf = requestAnimationFrame(step);
+      };
+      raf = requestAnimationFrame(step);
+    }
+
+    /* ---- open / close ---- */
+    function open(from) {
+      opener = from || null;
+      closeMenu();
+      dlg.hidden = false;
+      document.body.style.overflow = "hidden";
+      requestAnimationFrame(() => { dlg.classList.add("open"); size(); draw(performance.now()); });
+      $("#tuClose").focus();
+    }
+    function close() {
+      stopTone(); micOff();
+      dlg.classList.remove("open");
+      document.body.style.overflow = "";
+      setTimeout(() => { if (!dlg.classList.contains("open")) dlg.hidden = true; }, reduce ? 0 : 800);
+      if (ac) ac.suspend();
+      if (location.hash === "#accordatura") history.replaceState(null, "", location.pathname + location.search);
+      if (opener) opener.focus();
+    }
+
+    $$("[data-tuner]").forEach((b) => b.addEventListener("click", () => open(b)));
+    $("#tuClose").addEventListener("click", close);
+    keys.forEach((k, i) => k.addEventListener("click", () => play(i)));
+    $("#tuMic").addEventListener("click", () => {
+      if (stream) { micOff(); return; }
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { status(t("tuner.denied")); return; }
+      micOn();
+    });
+    const nudge = (d) => { ref = Math.max(415, Math.min(446, ref + d)); store("tunerA", ref); showRef(); };
+    $("#tuDown").addEventListener("click", () => nudge(-1));
+    $("#tuUp").addEventListener("click", () => nudge(1));
+    $("#tuFifths").addEventListener("click", () => { pure = !pure; store("tunerFifths", pure ? "pure" : "tempered"); showRef(); });
+    addEventListener("resize", () => { if (!dlg.hidden) { size(); draw(performance.now()); } });
+    addEventListener("keydown", (e) => {
+      if (dlg.hidden) return;
+      if (e.key === "Escape") close();
+      if (e.key === "Tab") {
+        const f = $$("button", dlg);
+        if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+        else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+      }
+    });
+    document.addEventListener("visibilitychange", () => { if (document.hidden && !dlg.hidden) { stopTone(); if (stream) micOff(); } });
+
+    showRef();
+    // a shareable link straight to the tuner: …/#accordatura
+    if (location.hash === "#accordatura") setTimeout(() => open(), root.classList.contains("no-intro") ? 0 : 2200);
+  })();
+
+  /* ======================================================================
      Cursor (fine pointers only)
      ====================================================================== */
   if (matchMedia("(hover: hover) and (pointer: fine)").matches && !reduce) {

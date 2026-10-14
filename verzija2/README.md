@@ -30,6 +30,12 @@ Te tri datoteke, `sitemap.xml` i `robots.txt` **generiraju se** — ne uređujte
 - **Uvodna rečenica** — `statement`; riječ u `*zvjezdicama*` ispisuje se jantarnim kurzivom.
 - **Fotografija** — dodaj u seriju u `SERIES` (WebP u `assets/photos/sm` i `lg`, original u `assets/press`).
 
+## Štimer (Accordatura)
+
+Oznake „A = 442 Hz“ (hero, footer, izbornik na mobitelu) otvaraju štimer za violončelo: referentni tonovi
+C G D A, mikrofon (obrada samo u pregledniku), podesivi A (415–446 Hz) i čiste/temperirane kvinte.
+Izravna poveznica: `https://www.monikaleskovar.com/#accordatura`. Mikrofon radi samo preko HTTPS-a (ili `localhost`).
+
 ## Što je u mapi
 
 ```

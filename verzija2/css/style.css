@@ -465,6 +465,104 @@ body::after {
 @media (hover: hover) and (pointer: fine) { .cursor { display: block; } }
 
 /* ==========================================================================
+   Accordatura — cello tuner (opens from the small "A = 442 Hz" marks)
+   ========================================================================== */
+.tune-link { color: inherit; letter-spacing: inherit; text-transform: inherit; transition: color .3s; }
+.tune-link b { font-weight: 400; color: var(--bone); transition: color .3s; }
+.tune-link:hover, .tune-link:hover b { color: var(--amber-2); }
+.hero__facts { display: flex; gap: 34px; }
+.hero__tune .tune-link { font-size: inherit; }
+.foot__end { justify-self: end; display: flex; gap: 28px; align-items: center; }
+
+.tuner {
+  position: fixed; inset: 0; z-index: 160; background: var(--basalt); color: var(--bone);
+  display: grid; grid-template-rows: auto minmax(min-content, 1fr) auto; overflow-y: auto; overscroll-behavior: contain;
+  clip-path: inset(100% 0 0 0); transition: clip-path .8s var(--ease-io);
+}
+.tuner[hidden] { display: none; }
+.tuner.open { clip-path: inset(0 0 0 0); }
+.tu__top { display: flex; justify-content: space-between; align-items: center; padding: 18px var(--gutter); color: var(--mist); }
+.tu__close { width: 46px; height: 46px; border: 1px solid var(--line-2); border-radius: 50%; font-size: 15px; color: var(--bone); transition: background .3s, color .3s; }
+.tu__close:hover { background: var(--bone); color: var(--night); }
+
+.tu__stage { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; align-content: center; gap: clamp(18px, 3.5vh, 36px); padding: 0 var(--gutter); min-height: 0; }
+.tu__read { display: grid; justify-items: center; line-height: 1; }
+.tu__num { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; color: var(--amber-2); min-height: 1em; }
+.tu__note {
+  font-family: var(--display); font-style: italic; font-variation-settings: "opsz" 96; font-weight: 400;
+  font-size: clamp(5.5rem, 17vh, 10rem); line-height: 1.02; letter-spacing: -.02em; color: var(--bone-2);
+  transition: color .4s, text-shadow .6s;
+}
+.tu__cents { color: var(--mist); min-height: 1.2em; font-variant-numeric: tabular-nums; transition: color .4s; }
+.tuner:not(.live):not(.ref) .tu__note { color: var(--line-2); }
+.tuner.near .tu__note { color: var(--bone); }
+.tuner.tuned .tu__note { color: var(--amber-2); text-shadow: 0 0 40px rgba(234, 174, 110, .35); }
+.tuner.tuned .tu__cents { color: var(--amber-2); }
+
+.tu__gauge { position: relative; width: 100%; max-width: 560px; height: 44px; }
+.tu__scale {
+  position: absolute; left: 0; right: 0; top: 0; height: 14px; border-bottom: 1px solid var(--line-2);
+  background:
+    linear-gradient(var(--amber-2), var(--amber-2)) 50% 0 / 1px 100% no-repeat,
+    repeating-linear-gradient(90deg, var(--line-2) 0 1px, transparent 1px calc(10% - .1px)) 0 100% / 100% 9px no-repeat,
+    repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px calc(2% - .02px)) 0 100% / 100% 5px no-repeat;
+}
+.tu__needle {
+  position: absolute; left: 50%; top: -8px; width: 2px; height: 30px; margin-left: -1px; border-radius: 2px;
+  background: var(--bone); opacity: 0; transition: opacity .4s, background .4s, box-shadow .4s;
+}
+.tuner.live .tu__needle { opacity: 1; }
+.tuner.tuned .tu__needle { background: var(--amber-2); box-shadow: 0 0 14px rgba(234, 174, 110, .8); }
+.tu__lab { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between; color: var(--mist); font-size: 10px; }
+.tu__lab i { font-style: normal; width: 0; display: flex; justify-content: center; }
+
+.tu__strings { width: 100%; max-width: 420px; display: grid; gap: 14px; }
+.tu__strings canvas { width: 100%; height: clamp(110px, 26vh, 260px); display: block; }
+.tu__keys { display: grid; grid-template-columns: repeat(4, 1fr); justify-items: center; }
+.tu__keys button {
+  width: 58px; height: 58px; border: 1px solid var(--line-2); border-radius: 50%;
+  display: grid; place-content: center; gap: 1px; line-height: 1; transition: background .3s, color .3s, border-color .3s;
+}
+.tu__keys b { font-family: var(--display); font-style: italic; font-weight: 400; font-size: 24px; }
+.tu__keys i { font-style: normal; font-size: 9px; color: var(--mist); transition: color .3s; }
+.tu__keys button:hover { border-color: var(--bone); }
+.tu__keys button.on { background: var(--amber-2); border-color: var(--amber-2); color: var(--night); }
+.tu__keys button.on i { color: var(--night); }
+.tu__keys button.hit { border-color: var(--amber-2); color: var(--amber-2); }
+
+.tu__bottom {
+  display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 14px 30px;
+  padding: 24px var(--gutter) 22px; border-top: 1px solid var(--line); margin-top: 24px;
+}
+.tu__mic { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.tu__micbtn { gap: 10px; }
+.tu__dot { width: 7px; height: 7px; border-radius: 50%; background: var(--mist); transition: background .3s; }
+.tu__micbtn[aria-pressed="true"] { border-color: var(--amber-2); }
+.tu__micbtn[aria-pressed="true"] .tu__dot { background: var(--amber-2); animation: tuPulse 1.6s ease-in-out infinite; }
+@keyframes tuPulse { 50% { opacity: .25; } }
+.tu__status { margin: 0; color: var(--bone-2); font-size: 15px; }
+.tu__set { display: flex; align-items: center; gap: 26px; color: var(--mist); }
+.tu__ref { display: flex; align-items: center; gap: 10px; }
+.tu__ref b, .tu__fifths b { color: var(--bone); font-weight: 400; display: inline-block; min-width: 3ch; text-align: center; }
+.tu__ref button { width: 30px; height: 30px; border: 1px solid var(--line-2); border-radius: 50%; font-size: 14px; letter-spacing: 0; transition: background .3s, color .3s; }
+.tu__ref button:hover { background: var(--bone); color: var(--night); }
+.tu__fifths { letter-spacing: inherit; text-transform: inherit; }
+.tu__fifths:hover b { color: var(--amber-2); }
+.tu__fifths b { min-width: 0; }
+.tu__privacy { grid-column: 1 / -1; margin: 0; color: var(--mist); font-size: 12px; }
+
+@media (max-width: 700px) {
+  .hero__tune { display: none; }
+  .foot__end { justify-self: start; }
+  .tu__bottom { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; }
+  .tu__mic { justify-content: center; flex-direction: column; gap: 12px; }
+  .tu__set { flex-wrap: wrap; justify-content: center; gap: 14px 24px; }
+  .tu__keys button { width: 52px; height: 52px; }
+  .tu__strings canvas { height: clamp(90px, 20vh, 200px); }
+  .tu__note { font-size: clamp(4.5rem, 13vh, 7rem); }
+}
+
+/* ==========================================================================
    Responsive
    ========================================================================== */
 @media (max-width: 1180px) {
