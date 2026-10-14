@@ -1,0 +1,38 @@
+// Full biography texts (HR / EN / DE) and downloadable documents.
+window.BIO = {
+ "hr": [
+  "Violončelistica Monika Leskovar (1981.) skrenula je na sebe pozornost javnosti 1995. godine kada je u trinaestoj godini postala najmlađom pobjednicom Međunarodnog natjecanja Čajkovski u Japanu.",
+  "Najprije polaznica Glazbenog učilišta Elly Bašić u Zagrebu kod prof. Dobrile Berković Magdalenić, zatim učenica Valtera Dešpalja, diplomirala je i završila poslijediplomski studij na Glazbenoj akademiji Hanns Eisler u Berlinu u razredu prof. Davida Geringasa, gdje je 2006. preuzela mjesto njegova asistenta. Usavršavala se na majstorskim tečajevima Mstislava Rostropoviča i Bernarda Greenhousea. Pobjednica je mnogih međunarodnih natjecanja kao što su ARD u Münchenu (2001.), Mstislav Rostropovič u Parizu, Roberto Caruana u Milanu (1999.) te Adam na Novom Zelandu (2003.). Bila je prva hrvatska predstavnica Eurovizijskog natjecanja za mlade glazbenike koja je ušla u finale, nastupivši u Beču 1998.",
+  "Koncertirala je u Japanu, Belgiji, Francuskoj, Njemačkoj, Danskoj, Mađarskoj, Velikoj Britaniji, Novom Zelandu te Australiji. Kao solistica nastupala je s orkestrima kao što su: Simfonijski orkestar Bavarskoga radija, Moskovska filharmonija, Sendajska filharmonija, Slovenska filharmonija, Sanktpeterburški simfonijski orkestar, Zagrebačka filharmonija, Essenska filharmonija, Praški komorni orkestar, Litavski komorni orkestar, Kremerata Baltica, Zagrebački solisti, te s dirigentima poput Valerija Gergijeva, Thomasa Hengelbrocka, Krzysztofa Pendereckog i mnogih drugih.",
+  "Održala je brojne recitale, te redovito nastupa na festivalima komorne glazbe po cijelom svijetu, među kojima se ističu Manchester International Cello Festival, Kronberg Academy Festival, Rostropovich Festival, Festival Casals, Dubrovačke ljetne igre, Schleswig-Holstein Musik Festival, Mozartfest Würzburg i dr. Ostvarila je uspješnu suradnju s brojnim istaknutim glazbenicima kao što su Giovanni Sollima, Ivana Švarc Grenda, Boris Berezovsky, Sofia Gubaidulina, Jurij Bašmet, Julian Rachlin, Stefan Milenković, Mischa Maiski, Itamar Golan, Gidon Kremer, Mario Brunello, Patti Smith, Janine Jansen i dr.",
+  "U sezoni 2010/2011. djelovala je kao prva violončelistica Münchenske filharmonije. Od 2012. godine profesorica je na Konzervatoriju Talijanske Švicarske u Luganu, a od 2017. docentica na Muzičkoj akademiji u Zagrebu. Svira na violončelu napuljskog majstora Vincenza Postiglionea iz godine 1884., koje je dobila na upotrebu od grada Zagreba i Zagrebačke filharmonije."
+ ],
+ "en": [
+  "The Croatian cellist Monika Leskovar (Kreuztal, Germany, 15 March 1981) started to play the violoncello at the age of six in the class of Dobrila Berković Magdalenić at the Elly Bašić Music School in Zagreb. Aged 13 she gained public attention having won the first prize at the International Tchaikovsky Competition in Sendai, Japan in 1995.",
+  "In Zagreb she was also a student of Valter Dešpalj before continuing her studies in Germany, where she got her diploma and finished postgraduate studies in the class of David Geringas at the Hochschule für Musik Hanns Eisler in Berlin. In 2006 she became his assistant at the same school. Monika Leskovar attended master classes given by Mstislav Rostropovich and Bernard Greenhouse. She was the winner at many international competitions such as the ARD in Munich (2001), Mstislav Rostropovich in Paris, Roberto Caruana in Milan (1999) and Adam in New Zealand (2003). She was the first Croatian representative at the Eurovision Competition for Young Musicians and was a finalist at the concert in Vienna in 1998.",
+  "Having gained a notable reputation, Monika Leskovar has given numerous concerts in Japan, Belgium, France, Germany, Denmark, Hungary, Great Britain, New Zealand and Australia. As a soloist she has performed with important orchestras such as the Symphonieorchester des Bayerischen Rundfunks, Moscow Philharmonic Orchestra, Sendai Philharmonic Orchestra, Slovenian Philharmonic Orchestra, St. Petersburg Symphony Orchestra, Zagreb Philharmonic Orchestra, Philharmonie Essen, Prague Chamber Orchestra, Latvian Chamber Orchestra, Kremerata Baltica, Zagreb Soloists and others, conducted by Valery Gergiev, Thomas Hengelbrock, Krzysztof Penderecki and many other renowned maestros.",
+  "A frequent guest of festivals worldwide, Monika Leskovar has performed at the Manchester International Cello Festival, Kronberg Academy Festival, Rostropovich Festival, Festival Casals, Dubrovnik Summer Festival, Schleswig-Holstein Musik Festival, Mozartfest Würzburg and other important music festivals. As a chamber musician she has had numerous very successful collaborations with artists of international standing, including Giovanni Sollima, Ivana Švarc Grenda, Boris Berezovsky, Sofia Gubaidulina, Yuri Bashmet, Julian Rachlin, Stefan Milenkovich, Mischa Maisky, Itamar Golan, Gidon Kremer, Mario Brunello, Patti Smith, Janine Jansen and others.",
+  "During the 2010/2011 season Monika Leskovar was principal cellist of the Münchner Philharmoniker. From 2012 she taught at the Conservatorio della Svizzera italiana in Lugano, and since 2017 she has held the post of assistant professor at the Academy of Music of the University of Zagreb. She plays a violoncello by the Neapolitan master Vincenzo Postiglione from 1884, which was given to her use by the City of Zagreb and the Zagreb Philharmonic Orchestra."
+ ],
+ "de": [
+  "Monika Leskovar, geboren 1981, studierte von 1996 bis 2005 Violoncello an der Hochschule für Musik „Hanns Eisler“ Berlin und arbeitete dort auch als Assistentin am Lehrstuhl von Prof. David Geringas. In Meisterkursen u. a. bei Mstislav Rostropowitsch und Bernard Greenhouse perfektionierte Monika Leskovar ihr Können.",
+  "Sie gewann mehrere erste Preise bei internationalen Violoncello-Wettbewerben, u. a. beim 5. Adam International Cello Festival and Competition, Neuseeland, und beim 2. International Tchaikovsky Competition for Young Musicians, Japan, sowie den zweiten Preis und den Publikumspreis des Internationalen ARD-Musikwettbewerbs 2001 und den dritten Preis beim Rostropowitsch-Wettbewerb.",
+  "Sie spielt mit bedeutenden Dirigenten, u. a. mit Valery Gergiev, Thomas Hengelbrock, Kazushi Ono, Alan Buribayev, Martin Turnovský und Johannes Wildner, und mit vielen anerkannten Orchestern wie der Moskauer Philharmonie, der Sendai Philharmonie und der Slowenischen Philharmonie, dem Royal Symphony Orchestra Sevilla, dem St. Petersburger Symphonieorchester und der Zagreber Philharmonie.",
+  "Ihr künstlerisches Interesse gilt auch der Kammermusik. Dabei konzertiert sie zusammen mit Giovanni Sollima, Gidon Kremer und der Kremerata Baltica, Yuri Bashmet, Boris Berezovsky, Vassily Lobanov, Julian Rachlin, Itamar Golan, Mischa Maisky, Tabea Zimmermann und Sofia Gubaidulina. Des Weiteren runden Auftritte mit dem Prager Kammerorchester und dem Litauischen Kammerorchester ihre kammermusikalischen Aktivitäten ab.",
+  "Monika Leskovar tritt bei internationalen Musikfestivals auf und gibt Rezitale in Europa, Japan, Australien und Neuseeland. Auf drei CD-Einspielungen bietet sie eine Auswahl aus der Cellomusik des 19. und 20. Jahrhunderts dar."
+ ]
+};
+window.BIO_DOCS = {
+ "hr": {
+  "pdf": "assets/docs/monika_leskovar_biografija.pdf",
+  "docx": "assets/docs/monika_leskovar_biografija.docx"
+ },
+ "en": {
+  "pdf": "assets/docs/monika_leskovar_biography.pdf",
+  "docx": "assets/docs/monika_leskovar_biography.docx"
+ },
+ "de": {
+  "pdf": "assets/docs/monika_leskovar_biografie.pdf",
+  "docx": "assets/docs/monika_leskovar_biografie.docx"
+ }
+};

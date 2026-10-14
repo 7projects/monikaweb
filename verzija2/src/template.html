@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<!--
+  NE UREĐUJTE index.html, en/index.html ni de/index.html IZRAVNO — generiraju se.
+  Izvor je ova datoteka (src/template.html) + js/content.js + js/bio.js.
+  Nakon izmjene pokrenite:  node build.js
+
+  {{key}} = tekst iz I18N, {{{key}}} = HTML iz I18N, [[blok]] = generirani sadržaj, @/ = put do korijena
+-->
+<html lang="[[lang]]">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{meta.title}}</title>
+  <meta name="description" content="{{meta.description}}">
+  <meta name="theme-color" content="#0a0b0d">
+  <link rel="canonical" href="[[url]]">
+[[hreflang]]
+  <link rel="icon" href="@/assets/favicon.svg" type="image/svg+xml">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Monika Leskovar">
+  <meta property="og:url" content="[[url]]">
+  <meta property="og:locale" content="[[locale]]">
+  <meta property="og:title" content="{{meta.title}}">
+  <meta property="og:description" content="{{meta.description}}">
+  <meta property="og:image" content="[[site]]assets/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="{{hero.alt}}">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..600&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="@/assets/hero/hero.webp" media="(min-width: 1301px)">
+  <link rel="preload" as="image" href="@/assets/hero/hero-md.webp" media="(min-width: 701px) and (max-width: 1300px)">
+  <link rel="preload" as="image" href="@/assets/hero/hero-portrait.webp" media="(max-width: 700px)">
+  <link rel="stylesheet" href="@/css/style.css">
+
+  <script type="application/ld+json">[[jsonld]]</script>
+  <script>
+    (function () {
+      var d = document.documentElement, home = [[isHome]];
+      d.classList.add("js");
+      try {
+        if (sessionStorage.getItem("intro") === "1" || matchMedia("(prefers-reduced-motion: reduce)").matches) d.classList.add("no-intro");
+        // Returning visitor who chose a language earlier: send them there once per visit (only from the home URL).
+        var saved = localStorage.getItem("lang");
+        if (home && saved && saved !== "hr" && !sessionStorage.getItem("langRoute")) {
+          sessionStorage.setItem("langRoute", "1");
+          location.replace(saved + "/" + (location.protocol === "file:" ? "index.html" : "") + location.hash);
+        }
+        sessionStorage.setItem("langRoute", "1");
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#statement">{{nav.skip}}</a>
+
+  <!-- ===== Intro: one bow stroke ===== -->
+  <div class="intro" id="intro" aria-hidden="true">
+    <div class="intro__inner">
+      <span class="mono intro__label">{{intro.tuning}}</span>
+      <span class="intro__hz mono">A = <b id="hz">415</b> Hz</span>
+      <span class="intro__bow"><i></i></span>
+    </div>
+  </div>
+
+  <!-- ===== Header ===== -->
+  <header class="head" id="head">
+    <a class="head__mark" href="#top" aria-label="Monika Leskovar">
+      <span class="head__mono">ML</span>
+      <span class="head__name">Monika Leskovar</span>
+    </a>
+    <nav class="head__nav" aria-label="{{nav.main}}">
+      <a href="#bio"><i>II</i><span>{{nav.bio}}</span></a>
+      <a href="#audio"><i>III</i><span>{{nav.audio}}</span></a>
+      <a href="#gallery"><i>IV</i><span>{{nav.gallery}}</span></a>
+      <a href="#concerts"><i>V</i><span>{{nav.concerts}}</span></a>
+      <a href="#coda"><i>VI</i><span>{{nav.contact}}</span></a>
+    </nav>
+    <nav class="head__lang" aria-label="{{nav.language}}">[[langShort]]</nav>
+    <button class="head__menu" id="menuBtn" aria-expanded="false" aria-controls="programme">
+      <span class="mono">{{nav.menu}}</span><span class="head__lines"><b></b><b></b></span>
+    </button>
+  </header>
+
+  <!-- ===== Programme (menu) ===== -->
+  <div class="programme" id="programme" aria-hidden="true">
+    <div class="programme__inner">
+      <p class="mono programme__cap">Monika Leskovar — {{hero.role}}</p>
+      <ol class="programme__list">
+        <li><a href="#top"><i>I</i><span>{{nav.prelude}}</span></a></li>
+        <li><a href="#bio"><i>II</i><span>{{nav.bio}}</span></a></li>
+        <li><a href="#audio"><i>III</i><span>{{nav.audio}}</span></a></li>
+        <li><a href="#gallery"><i>IV</i><span>{{nav.gallery}}</span></a></li>
+        <li><a href="#concerts"><i>V</i><span>{{nav.concerts}}</span></a></li>
+        <li><a href="#coda"><i>VI</i><span>{{nav.contact}}</span></a></li>
+      </ol>
+      <div class="programme__foot">
+        <nav class="programme__lang" aria-label="{{nav.language}}">[[langLong]]</nav>
+        <a class="mono" href="mailto:info@monikaleskovar.com">info@monikaleskovar.com</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gentle offer of another language (shown by JS only on the Croatian page) -->
+  <aside class="langnote" id="langnote" hidden>
+    <a id="langnoteLink" href="#"></a>
+    <button id="langnoteClose" aria-label="×">✕</button>
+  </aside>
+
+  <main>
+    <!-- ===== I. Hero ===== -->
+    <section class="hero" id="top">
+      <div class="hero__media" id="heroMedia">
+        <picture>
+          <source media="(max-width: 700px)" srcset="@/assets/hero/hero-portrait.webp">
+          <source media="(max-width: 1300px)" srcset="@/assets/hero/hero-md.webp">
+          <img src="@/assets/hero/hero.webp" alt="{{hero.alt}}" width="2400" height="1598" fetchpriority="high">
+        </picture>
+        <div class="hero__mist" aria-hidden="true"><span></span><span></span></div>
+      </div>
+      <div class="hero__shade" aria-hidden="true"></div>
+
+      <div class="hero__meta mono">
+        <span class="hero__index">I.</span>
+        <span>{{hero.role}}</span>
+      </div>
+
+      <h1 class="hero__name">
+        <span class="hero__word" data-split>Monika</span>
+        <span class="hero__word hero__word--it" data-split>Leskovar</span>
+        <span class="sr">— {{hero.role}}</span>
+      </h1>
+
+      <dl class="hero__facts mono">
+        <div><dt>{{hero.instrumentLabel}}</dt><dd>{{hero.instrument}}</dd></div>
+      </dl>
+
+      <a class="hero__scroll mono" href="#statement">
+        <span>{{hero.scroll}}</span>
+        <i aria-hidden="true"></i>
+      </a>
+    </section>
+
+    <!-- ===== Statement ===== -->
+    <section class="statement" id="statement">
+      <div class="staff" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+      <p class="statement__text" id="statementText">[[statement]]</p>
+    </section>
+
+    <!-- ===== II. Biography ===== -->
+    <section class="bio" id="bio">
+      <div class="wrap">
+        <header class="shead">
+          <span class="shead__num">II</span>
+          <span class="mono shead__label">{{bio.label}}</span>
+          <h2 class="shead__title">{{{bio.title}}}</h2>
+        </header>
+      </div>
+
+      <div class="timeline" id="timeline">
+        <div class="timeline__sticky">
+          <ol class="timeline__track" id="timelineTrack">[[timeline]]</ol>
+          <div class="timeline__bar"><span id="timelineProgress"></span></div>
+          <p class="timeline__hint mono">{{bio.drag}}</p>
+        </div>
+      </div>
+
+      <div class="wrap">
+        <div class="bio__more">
+          <button class="bio__toggle" id="bioToggle" aria-expanded="false" aria-controls="bioFull">
+            <span class="bio__toggle-label">{{bio.read}}</span>
+            <span class="bio__plus" aria-hidden="true"></span>
+          </button>
+          <!-- full text stays in the HTML (readable by search engines), folded until opened -->
+          <div class="bio__full" id="bioFull">
+            <div class="bio__cols">[[bio]]</div>
+            <div class="bio__docs">
+              <span class="mono">{{bio.download}}</span>
+              <a class="pill" href="@/[[bioPdf]]" download>PDF</a>
+              <a class="pill" href="@/[[bioDocx]]" download>DOCX</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="with">
+          <h3 class="mono with__label">{{bio.with}}</h3>
+          <p class="with__names">[[with]]</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== III. Audio ===== -->
+    <section class="audio" id="audio">
+      <div class="wrap">
+        <header class="shead">
+          <span class="shead__num">III</span>
+          <span class="mono shead__label">{{audio.label}}</span>
+          <h2 class="shead__title">{{audio.title}}</h2>
+        </header>
+
+        <div class="audio__grid">
+          <div class="disc" id="disc">
+            <canvas id="discCanvas" aria-hidden="true"></canvas>
+            <button class="disc__center" id="discBtn" data-cursor="play">
+              <span class="mono disc__state" id="discState">{{audio.ready}}</span>
+              <span class="disc__composer" id="discComposer">[[firstComposer]]</span>
+              <span class="disc__icon" aria-hidden="true">
+                <svg class="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                <svg class="i-pause" viewBox="0 0 24 24"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
+              </span>
+              <span class="mono disc__time" id="discTime">00:00 / [[firstDuration]]</span>
+            </button>
+          </div>
+
+          <ol class="tracklist" id="tracklist">[[tracks]]</ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== IV. Gallery ===== -->
+    <section class="gallery" id="gallery">
+      <div class="wrap">
+        <header class="shead shead--row">
+          <div>
+            <span class="shead__num">IV</span>
+            <span class="mono shead__label">{{gallery.label}}</span>
+            <h2 class="shead__title">{{{gallery.title}}}</h2>
+          </div>
+          <p class="gallery__press">{{gallery.press}}</p>
+        </header>
+
+        <div class="filters" role="tablist" id="filters">[[filters]]</div>
+        <div class="sets" id="grid">[[gallery]]</div>
+      </div>
+    </section>
+
+    <!-- ===== V. Concerts ===== -->
+    <section class="concerts" id="concerts">
+      <div class="wrap">
+        <header class="shead">
+          <span class="shead__num">V</span>
+          <span class="mono shead__label">{{concerts.label}}</span>
+          <h2 class="shead__title">{{concerts.title}}</h2>
+        </header>
+        <div class="concerts__cols">
+          <div>
+            <h3 class="mono concerts__h">{{concerts.upcoming}}</h3>
+            <ol class="programme-list" id="upcoming">[[upcoming]]</ol>
+          </div>
+          <div class="concerts__past"[[pastHidden]]>
+            <h3 class="mono concerts__h">{{concerts.archive}}</h3>
+            <ol class="programme-list programme-list--past" id="past">[[past]]</ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== VI. Coda ===== -->
+    <section class="coda" id="coda">
+      <div class="coda__bg" aria-hidden="true"></div>
+      <div class="wrap coda__inner">
+        <header class="shead">
+          <span class="shead__num">VI</span>
+          <span class="mono shead__label">{{contact.label}}</span>
+        </header>
+        <h2 class="coda__title">{{{contact.title}}}</h2>
+        <a class="coda__mail" href="mailto:info@monikaleskovar.com" data-cursor="mail">
+          <span>info@monikaleskovar.com</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M8 5h11v11"/></svg>
+        </a>
+        <ul class="coda__social mono">
+          <li><a href="https://www.instagram.com/monikaleskovarcello" target="_blank" rel="noopener">Instagram ↗</a></li>
+          <li><a href="https://www.facebook.com/monika.leskovar.5" target="_blank" rel="noopener">Facebook ↗</a></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot__inner mono">
+      <span>© [[year]] Monika Leskovar — {{footer.rights}}</span>
+      <span class="foot__fine">Fine</span>
+      <a href="#top">{{footer.top}}</a>
+    </div>
+  </footer>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="{{gallery.label}}" hidden>
+    <div class="lb__top mono">
+      <span id="lbCount"></span>
+      <button id="lbClose" aria-label="{{nav.close}}">✕</button>
+    </div>
+    <figure class="lb__stage"><img id="lbImg" alt=""></figure>
+    <div class="lb__bottom mono">
+      <button id="lbPrev" aria-label="←">←</button>
+      <a id="lbDownload" href="#" download>{{gallery.download}} ↓</a>
+      <button id="lbNext" aria-label="→">→</button>
+    </div>
+  </div>
+
+  <!-- Custom cursor (fine pointers only) -->
+  <div class="cursor" id="cursor" aria-hidden="true"><span class="cursor__ring"></span><span class="cursor__label mono" id="cursorLabel"></span></div>
+
+  <audio id="player" preload="none"></audio>
+
+  <script>window.ROOT = "@/";</script>
+  <script src="@/js/content.js"></script>
+  <script src="@/js/peaks.js"></script>
+  <script src="@/js/main.js"></script>
+</body>
+</html>
