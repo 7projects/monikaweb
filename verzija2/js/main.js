@@ -262,7 +262,63 @@
   })();
 
   /* ======================================================================
-     IV. Gallery — filters + lightbox (tiles are plain links to the large image)
+     IV. Discography — the Spotify player loads only when asked for
+     (no third-party requests or cookies before that; without JS it is a plain link)
+     ====================================================================== */
+  (function discography() {
+    const albums = $$(".album");
+    const shelf = $$(".shelf a");
+    if (!albums.length) return;
+
+    // only one Spotify player at a time: switching albums removes it (and stops its sound)
+    function closePlayer() {
+      $$(".album__player").forEach((frame) => {
+        const note = document.createElement("p");
+        note.className = "album__note";
+        note.textContent = t("disco.note");
+        frame.replaceWith(note);
+      });
+      $$(".album__play.on").forEach((b) => b.classList.remove("on"));
+    }
+
+    function show(n, focus) {
+      const next = $("#album-" + n);
+      if (!next || next.classList.contains("on")) return;
+      closePlayer();
+      albums.forEach((a) => a.classList.toggle("on", a === next));
+      shelf.forEach((a) => (a.dataset.album === String(n) ? a.setAttribute("aria-current", "true") : a.removeAttribute("aria-current")));
+      if (focus) {
+        const top = next.getBoundingClientRect().top;
+        if (top < 0 || top > innerHeight * 0.5) next.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+        $(".album__title", next).focus({ preventScroll: true });
+      }
+    }
+
+    root.classList.add("disco-js");
+    albums.forEach((a) => $(".album__title", a).setAttribute("tabindex", "-1"));
+    shelf.forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); show(a.dataset.album, true); }));
+
+    $$(".album__play[data-spotify]").forEach((btn) => btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const body = btn.closest(".album__body");
+      let frame = $(".album__player", body);
+      if (!frame) {
+        frame = document.createElement("iframe");
+        frame.className = "album__player";
+        frame.src = `https://open.spotify.com/embed/album/${btn.dataset.spotify}?utm_source=generator&theme=0`;
+        frame.title = `Spotify — ${$(".album__title", body).textContent}`;
+        frame.allow = "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture";
+        frame.loading = "lazy";
+        $(".album__note", body).replaceWith(frame);
+      }
+      $("#player").pause();
+      btn.classList.add("on");
+      frame.focus();
+    }));
+  })();
+
+  /* ======================================================================
+     V. Gallery — filters + lightbox (tiles are plain links to the large image)
      ====================================================================== */
   (function gallery() {
     const grid = $("#grid");
@@ -298,7 +354,7 @@
       img.width = w; img.height = h;
       img.src = `${ROOT}assets/photos/lg/${p.name}.webp`;
       img.alt = $("img", p.tile).alt;
-      $("#lbCount").textContent = `IV — ${pad(idx + 1)} / ${pad(visible.length)}`;
+      $("#lbCount").textContent = `V — ${pad(idx + 1)} / ${pad(visible.length)}`;
       $("#lbDownload").href = `${ROOT}assets/press/${p.name}.${p.ext}`;
       $("#lbDownload").setAttribute("download", `Monika-Leskovar-${p.name}.${p.ext}`);
       [idx + 1, idx - 1].forEach((n) => { new Image().src = `${ROOT}assets/photos/lg/${visible[(n + visible.length) % visible.length].name}.webp`; });
@@ -677,7 +733,7 @@
      ====================================================================== */
   const heroMedia = $("#heroMedia");
   const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -10% 0px" });
-  ["shead", "tracklist", "disc", "filters", "concerts__cols", "coda__title", "coda__mail", "coda__social", "with", "bio__more"]
+  ["shead", "tracklist", "disc", "albums", "filters", "concerts__cols", "coda__title", "coda__mail", "coda__social", "with", "bio__more"]
     .forEach((c) => $$("." + c).forEach((el) => { el.classList.add("rv"); io.observe(el); }));
 
   let ticking = false;

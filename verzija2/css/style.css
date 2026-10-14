@@ -1,7 +1,7 @@
 /* ==========================================================================
    Monika Leskovar — verzija 2
    Ugođaj: vulkanska noć, plavetnilo dima, jantar violončela.
-   Struktura: stranica je koncertni program (stavci I–VI).
+   Struktura: stranica je koncertni program (stavci I–VII).
    ========================================================================== */
 
 :root {
@@ -352,7 +352,43 @@ body::after {
 @keyframes beat { 50% { transform: scale(.4); opacity: .5; } }
 
 /* ==========================================================================
-   IV. Gallery — strict 12-column grid
+   IV. Discography — album cards
+   ========================================================================== */
+.disco { padding: clamp(100px, 13vw, 180px) 0; border-top: 1px solid var(--line); }
+.albums { display: grid; gap: clamp(70px, 9vw, 130px); }
+.album { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(40px, 6vw, 110px); align-items: start; }
+.album__cover { width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; background: var(--ash); box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .8); }
+.album__meta { margin: 0 0 14px; color: var(--mist); }
+.album__title { margin: 0; font-family: var(--display); font-weight: 400; font-style: italic; font-size: clamp(2.6rem, 5.5vw, 5rem); line-height: 1; letter-spacing: -.02em; }
+.album__dl { margin: clamp(26px, 3vw, 40px) 0 0; border-top: 1px solid var(--line); }
+.album__dl > div { display: grid; grid-template-columns: 150px 1fr; gap: 4px 18px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.album__dl dt { color: var(--mist); padding-top: 4px; }
+.album__dl dd { margin: 0; font-family: var(--display); font-size: clamp(1.1rem, 1.6vw, 1.35rem); line-height: 1.3; }
+.album__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 14px; margin-top: 32px; }
+.album__play { display: inline-flex; align-items: center; gap: 14px; margin-right: 10px; font-family: var(--display); font-size: clamp(1.15rem, 1.6vw, 1.35rem); transition: color .3s; }
+.album__icon { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: var(--bone); color: var(--night); transition: background .3s, transform .4s var(--ease); }
+.album__icon svg { width: 20px; height: 20px; fill: currentColor; stroke: none; }
+.album__play:hover .album__icon, .album__play.on .album__icon { background: var(--amber-2); transform: scale(1.08); }
+.album__play.on { color: var(--amber-2); }
+.album__note { margin: 18px 0 0; font-size: 13px; color: var(--mist); }
+.disco-js .album:not(.on) { display: none; }
+.disco-js .album.on { animation: album-in .6s var(--ease); }
+@keyframes album-in { from { opacity: 0; transform: translateY(14px); } }
+.album__title:focus { outline: none; }
+
+.shelf { list-style: none; margin: 0; padding: clamp(36px, 4vw, 56px) 0 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 28px 18px; }
+.shelf a { display: grid; gap: 6px; color: var(--mist); transition: color .3s; }
+.shelf img { width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; background: var(--ash); margin-bottom: 6px; opacity: .55; filter: grayscale(.6); transition: opacity .4s, filter .4s, transform .5s var(--ease); }
+.shelf .mono { font-size: 11px; }
+.shelf__t { font-family: var(--display); font-size: 15px; line-height: 1.25; color: var(--bone-2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.shelf a:hover img, .shelf a:focus-visible img { opacity: 1; filter: none; transform: translateY(-4px); }
+.shelf a[aria-current] img { opacity: 1; filter: none; outline: 1px solid var(--amber-2); outline-offset: 4px; }
+.shelf a[aria-current] .mono, .shelf a[aria-current] .shelf__t { color: var(--amber-2); }
+.albums { gap: clamp(56px, 7vw, 100px); }
+.album__player { display: block; width: 100%; height: 352px; margin-top: 28px; border: 0; border-radius: 12px; background: var(--ash); }
+
+/* ==========================================================================
+   V. Gallery — strict 12-column grid
    ========================================================================== */
 .gallery { padding: clamp(100px, 13vw, 180px) 0; background: var(--basalt); border-top: 1px solid var(--line); }
 .gallery__press { max-width: 24em; margin: 0; font-size: 14px; color: var(--mist); }
@@ -400,7 +436,7 @@ body::after {
 .lb__stage img.loading { opacity: .2; }
 
 /* ==========================================================================
-   V. Concerts — printed programme
+   VI. Concerts — printed programme
    ========================================================================== */
 .concerts { padding: clamp(100px, 13vw, 180px) 0; }
 .concerts__cols { display: grid; grid-template-columns: 1.4fr 1fr; gap: clamp(40px, 7vw, 120px); }
@@ -421,7 +457,7 @@ body::after {
 .programme-list .empty a { display: inline-flex; gap: 10px; padding: 0; margin-top: 14px; font-family: var(--mono); font-style: normal; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--amber-2); border-bottom: 1px solid currentColor; }
 
 /* ==========================================================================
-   VI. Coda
+   VII. Coda
    ========================================================================== */
 .coda { position: relative; overflow: hidden; padding: clamp(120px, 15vw, 220px) 0 clamp(90px, 10vw, 140px); background: var(--night); border-top: 1px solid var(--line); }
 .coda__bg { position: absolute; top: 0; bottom: 0; right: 0; width: 58%; background: url("../assets/hero/bg3.webp") 30% 40% / cover no-repeat; opacity: .55; filter: grayscale(1) contrast(1.1);
@@ -578,6 +614,9 @@ body::after {
 
   .audio__grid { grid-template-columns: 1fr; }
   .disc { max-width: 460px; }
+  .album { grid-template-columns: 1fr; }
+  .album__cover { max-width: 460px; }
+  .shelf { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .concerts__cols { grid-template-columns: 1fr; }
   .with { grid-template-columns: 1fr; gap: 10px; }
   .with__label { padding-top: 0; }
@@ -610,6 +649,11 @@ body::after {
   .statement__text { font-size: clamp(1.6rem, 7.4vw, 2.2rem); }
   .shead--row > div, .shead { gap: 4px 16px; }
   .filters { gap: 4px 20px; }
+  .album__dl > div { grid-template-columns: 1fr; }
+  .shelf { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--gutter); gap: 14px; margin: 0 calc(-1 * var(--gutter)); padding-left: var(--gutter); padding-right: var(--gutter); scrollbar-width: none; }
+  .shelf::-webkit-scrollbar { display: none; }
+  .shelf li { flex: 0 0 34%; scroll-snap-align: start; }
+  .album__dl dt { padding-top: 0; }
   .programme-list a, .programme-list .row { grid-template-columns: 1fr auto; }
   .programme-list .dt { grid-column: 1 / -1; }
   .programme-list .pg { grid-column: 1 / -1; }

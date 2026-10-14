@@ -76,9 +76,10 @@
     <nav class="head__nav" aria-label="{{nav.main}}">
       <a href="#bio"><i>II</i><span>{{nav.bio}}</span></a>
       <a href="#audio"><i>III</i><span>{{nav.audio}}</span></a>
-      <a href="#gallery"><i>IV</i><span>{{nav.gallery}}</span></a>
-      <a href="#concerts"><i>V</i><span>{{nav.concerts}}</span></a>
-      <a href="#coda"><i>VI</i><span>{{nav.contact}}</span></a>
+      <a href="#disco"><i>IV</i><span>{{nav.disco}}</span></a>
+      <a href="#gallery"><i>V</i><span>{{nav.gallery}}</span></a>
+      <a href="#concerts"><i>VI</i><span>{{nav.concerts}}</span></a>
+      <a href="#coda"><i>VII</i><span>{{nav.contact}}</span></a>
     </nav>
     <nav class="head__lang" aria-label="{{nav.language}}">[[langShort]]</nav>
     <button class="head__menu" id="menuBtn" aria-expanded="false" aria-controls="programme">
@@ -94,9 +95,10 @@
         <li><a href="#top"><i>I</i><span>{{nav.prelude}}</span></a></li>
         <li><a href="#bio"><i>II</i><span>{{nav.bio}}</span></a></li>
         <li><a href="#audio"><i>III</i><span>{{nav.audio}}</span></a></li>
-        <li><a href="#gallery"><i>IV</i><span>{{nav.gallery}}</span></a></li>
-        <li><a href="#concerts"><i>V</i><span>{{nav.concerts}}</span></a></li>
-        <li><a href="#coda"><i>VI</i><span>{{nav.contact}}</span></a></li>
+        <li><a href="#disco"><i>IV</i><span>{{nav.disco}}</span></a></li>
+        <li><a href="#gallery"><i>V</i><span>{{nav.gallery}}</span></a></li>
+        <li><a href="#concerts"><i>VI</i><span>{{nav.concerts}}</span></a></li>
+        <li><a href="#coda"><i>VII</i><span>{{nav.contact}}</span></a></li>
       </ol>
       <div class="programme__foot">
         <nav class="programme__lang" aria-label="{{nav.language}}">[[langLong]]</nav>
@@ -223,12 +225,24 @@
       </div>
     </section>
 
-    <!-- ===== IV. Gallery ===== -->
+    <!-- ===== IV. Discography ===== -->
+    <section class="disco" id="disco">
+      <div class="wrap">
+        <header class="shead">
+          <span class="shead__num">IV</span>
+          <span class="mono shead__label">{{disco.label}}</span>
+          <h2 class="shead__title">{{disco.title}}</h2>
+        </header>
+        <div class="albums">[[discography]]</div>
+      </div>
+    </section>
+
+    <!-- ===== V. Gallery ===== -->
     <section class="gallery" id="gallery">
       <div class="wrap">
         <header class="shead shead--row">
           <div>
-            <span class="shead__num">IV</span>
+            <span class="shead__num">V</span>
             <span class="mono shead__label">{{gallery.label}}</span>
             <h2 class="shead__title">{{{gallery.title}}}</h2>
           </div>
@@ -240,11 +254,11 @@
       </div>
     </section>
 
-    <!-- ===== V. Concerts ===== -->
+    <!-- ===== VI. Concerts ===== -->
     <section class="concerts" id="concerts">
       <div class="wrap">
         <header class="shead">
-          <span class="shead__num">V</span>
+          <span class="shead__num">VI</span>
           <span class="mono shead__label">{{concerts.label}}</span>
           <h2 class="shead__title">{{concerts.title}}</h2>
         </header>
@@ -261,12 +275,12 @@
       </div>
     </section>
 
-    <!-- ===== VI. Coda ===== -->
+    <!-- ===== VII. Coda ===== -->
     <section class="coda" id="coda">
       <div class="coda__bg" aria-hidden="true"></div>
       <div class="wrap coda__inner">
         <header class="shead">
-          <span class="shead__num">VI</span>
+          <span class="shead__num">VII</span>
           <span class="mono shead__label">{{contact.label}}</span>
         </header>
         <h2 class="coda__title">{{{contact.title}}}</h2>

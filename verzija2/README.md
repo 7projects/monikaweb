@@ -28,6 +28,11 @@ Te tri datoteke, `sitemap.xml` i `robots.txt` **generiraju se** — ne uređujte
   `{ date: "2026-12-05", title: "Naziv", program: "Dvořák · Koncert u h-molu", place: "Lisinski, Zagreb", url: "https://..." }`
   Prošli datumi sami prelaze u arhivu (i bez ponovnog generiranja).
 - **Uvodna rečenica** — `statement`; riječ u `*zvjezdicama*` ispisuje se jantarnim kurzivom.
+- **Novi album** — u `DISCOGRAPHY` dodaj zapis (redoslijed = redoslijed na stranici, najnoviji prvi): naslov,
+  godina, izdavač, što Monika svira (HR/EN/DE), suradnici, Spotify ID iz poveznice `open.spotify.com/album/<ID>`
+  i po želji poveznica na trgovinu. Omot spremi kao WebP (~600px) u `assets/discography/`.
+  Prvi album je istaknut, ostali su na polici omota ispod; Spotify player učitava se tek kad posjetitelj klikne
+  „Poslušaj album“.
 - **Fotografija** — dodaj u seriju u `SERIES` (WebP u `assets/photos/sm` i `lg`, original u `assets/press`).
 
 ## Štimer (Accordatura)

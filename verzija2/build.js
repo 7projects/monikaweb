@@ -28,7 +28,7 @@ vm.createContext(sandbox);
 for (const f of ["js/content.js", "js/bio.js", "js/peaks.js"]) {
   vm.runInContext(fs.readFileSync(path.join(DIR, f), "utf8"), sandbox, { filename: f });
 }
-const { CONCERTS, TRACKS, SERIES, PRESS_EXT, COLLABORATORS, I18N, BIO, BIO_DOCS, PEAKS } = sandbox.window;
+const { CONCERTS, TRACKS, DISCOGRAPHY, SERIES, PRESS_EXT, COLLABORATORS, I18N, BIO, BIO_DOCS, PEAKS } = sandbox.window;
 
 const template = fs.readFileSync(path.join(DIR, "src/template.html"), "utf8")
   .replace(/\r\n/g, "\n")
@@ -99,6 +99,45 @@ function buildPage(L) {
               <span class="wk">${esc(tr.work)}${tr.detail ? " — " + esc(tr.detail) : ""}</span>
             </button></li>`).join("") + "\n          ";
 
+  // Discography: every album gets a full card (all visible without JS); with JS only the chosen one shows
+  // and the shelf of covers below switches between them.
+  const tx = (v) => (typeof v === "string" ? v : v[L.code] || v.en);
+  const cover = (a) => `${root}assets/discography/${a.cover}.webp`;
+  const albums = DISCOGRAPHY.map((a, i) => {
+    const spotify = `https://open.spotify.com/album/${a.spotify}`;
+    const row = (label, value) => value ? `
+                <div><dt class="mono">${esc(T(label))}</dt><dd>${esc(value)}</dd></div>` : "";
+    return `
+          <article class="album${i === 0 ? " on" : ""}" id="album-${i + 1}">
+            <img class="album__cover" src="${cover(a)}" width="600" height="600" alt="${esc(a.title)}" loading="lazy" decoding="async">
+            <div class="album__body">
+              <p class="mono album__meta">${a.year} · ${esc(a.label)}</p>
+              <h3 class="album__title">${esc(a.title)}</h3>
+              <dl class="album__dl">${row("disco.works", a.composer)}${row("disco.plays", tx(a.work))}${row("disco.with", (a.with || []).join(" · "))}
+              </dl>
+              <div class="album__actions">
+                <a class="album__play" href="${spotify}" target="_blank" rel="noopener" data-spotify="${esc(a.spotify)}" data-cursor="play">
+                  <span class="album__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+                  <span>${esc(T("disco.listen"))}</span>
+                </a>${a.shop ? `
+                <a class="pill" href="${esc(a.shop)}" target="_blank" rel="noopener">${esc(T("disco.buy"))} ↗</a>` : ""}
+                <a class="pill" href="${spotify}" target="_blank" rel="noopener">Spotify ↗</a>
+              </div>
+              <p class="album__note">${esc(T("disco.note"))}</p>
+            </div>
+          </article>`;
+  }).join("");
+  const shelf = DISCOGRAPHY.map((a, i) => `
+            <li><a href="#album-${i + 1}" data-album="${i + 1}"${i === 0 ? ' aria-current="true"' : ""}>
+              <img src="${cover(a)}" width="600" height="600" alt="" loading="lazy" decoding="async">
+              <span class="mono">${a.year}</span>
+              <span class="shelf__t">${esc(a.title)}</span>
+            </a></li>`).join("");
+  const discography = `${albums}
+          <ol class="shelf" aria-label="${esc(T("disco.all"))}">${shelf}
+          </ol>
+        `;
+
   const total = SERIES_ORDER.reduce((n, s) => n + SERIES[s].length, 0);
   const filters = [["all", total], ...SERIES_ORDER.map((s) => [s, SERIES[s].length])].map(([s, n], i) => `
           <button role="tab" data-series="${s}" aria-selected="${i === 0}"><span>${esc(T("gallery." + s))}</span><sup>${n}</sup></button>`).join("") + "\n        ";
@@ -116,7 +155,7 @@ function buildPage(L) {
       return `
               <a class="tile${p.w > p.h ? " tile--wide" : ""}" href="${root}assets/photos/lg/${p.name}.webp" data-name="${p.name}" data-w="${p.w}" data-h="${p.h}" data-ext="${ext}" data-cursor="view">
                 <img src="${root}assets/photos/sm/${p.name}.webp" width="${sw}" height="${sh}" alt="${esc(T("gallery.alt"))} — ${esc(T("gallery." + s))} ${pad(n)}" loading="lazy" decoding="async">
-                <span class="tile__n mono" aria-hidden="true">IV.${pad(n)}</span>
+                <span class="tile__n mono" aria-hidden="true">V.${pad(n)}</span>
               </a>`;
     }).join("")}
             </div>
@@ -155,7 +194,7 @@ function buildPage(L) {
     isHome: String(L.code === "hr"),
     langShort: LANGS.map((o) => langLink(o, o.code.toUpperCase())).join(""),
     langLong: LANGS.map((o) => langLink(o, o.name)).join(""),
-    statement, timeline, bio, tracks, filters, gallery,
+    statement, timeline, bio, tracks, discography, filters, gallery,
     bioPdf: BIO_DOCS[L.code].pdf, bioDocx: BIO_DOCS[L.code].docx,
     with: COLLABORATORS.map(([name, href]) => href
       ? `<a href="${esc(href)}" target="_blank" rel="noopener">${esc(name)}</a>`

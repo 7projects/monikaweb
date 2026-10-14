@@ -22,6 +22,127 @@ window.TRACKS = [
   { id: "Stamitz", composer: "Carl Stamitz", work: "Cello Concerto No. 1", detail: "G major" },
 ];
 
+/* Diskografija, od najnovijeg. Omot (WebP, ~600px) u assets/discography/, spotify = ID albuma iz poveznice
+   open.spotify.com/album/<ID>. composer, with i shop nisu obavezni.
+   work = što Monika svira na albumu; tekst ili { hr, en, de }. */
+window.DISCOGRAPHY = [
+  {
+    cover: "pejacevic", title: "Dora", composer: "Dora Pejačević", year: 2025, label: "Croatia Records",
+    with: ["Martina Filjak", "Andrej Bielow", "Martina Mikelić", "Zrinka Cvitešić"],
+    work: {
+      hr: "Trio za violinu, violončelo i klavir u C-duru, op. 29",
+      en: "Trio for Violin, Cello and Piano in C major, Op. 29",
+      de: "Trio für Violine, Violoncello und Klavier C-Dur op. 29",
+    },
+    spotify: "3dqOinkjovxfoyqSVAF2PD",
+    shop: "https://webshop.crorec.hr/proizvod/razni-izvodaci-dora-pejacevic/",
+  },
+  {
+    cover: "ravel-trio", title: "Ravel — Piano Trio", composer: "Maurice Ravel", year: 2021, label: "The Spot Records",
+    with: ["Susanna Yoko Henkel", "Milana Chernyavska"],
+    work: { hr: "Klavirski trio u a-molu, M. 67", en: "Piano Trio in A minor, M. 67", de: "Klaviertrio a-Moll M. 67" },
+    spotify: "5iYBFrZmCuUAEwp6Oigos9",
+  },
+  {
+    cover: "ravel-sonata", title: "Ravel — Sonata for Violin and Cello", composer: "Maurice Ravel", year: 2021, label: "The Spot Records",
+    with: ["Susanna Yoko Henkel"],
+    work: { hr: "Sonata za violinu i violončelo, M. 73", en: "Sonata for Violin and Cello, M. 73", de: "Sonate für Violine und Violoncello M. 73" },
+    spotify: "2DbTx38OR3cEwRgZWQQecr",
+  },
+  {
+    cover: "perle", title: "Perle", year: 2018, label: "Aquarius Records",
+    with: ["Hojsak & Novosel"],
+    work: { hr: "„Žeđam“ (gostovanje)", en: "“Žeđam” (guest appearance)", de: "„Žeđam“ (Gastauftritt)" },
+    spotify: "6q6UfHNPDFsvCTCD4bQ3zW",
+  },
+  {
+    cover: "costanzi-sinfonie", title: "Costanzi: Sinfonie per violoncello", year: 2017, label: "Glossa",
+    with: ["Giovanni Sollima", "Arianna Art Ensemble"],
+    work: {
+      hr: "Costanzi: Sonata da camera za dva violončela u F-duru · Sollima: The Hunting Sonata",
+      en: "Costanzi: Sonata da camera for Two Cellos in F major · Sollima: The Hunting Sonata",
+      de: "Costanzi: Sonata da camera für zwei Violoncelli F-Dur · Sollima: The Hunting Sonata",
+    },
+    spotify: "6hbLYqj6rQNQ8qcSXMlGZe",
+  },
+  {
+    cover: "costanzi-sonate", title: "Costanzi: Cello Sonatas — Sollima: Il mandataro", composer: "Giovanni Battista Costanzi", year: 2016, label: "Glossa",
+    with: ["Giovanni Sollima", "Arianna Art Ensemble"],
+    work: {
+      hr: "Sonate za dva violončela u F-duru i C-duru",
+      en: "Sonatas for Two Cellos in F major and C major",
+      de: "Sonaten für zwei Violoncelli F-Dur und C-Dur",
+    },
+    spotify: "0H2T0YZqNeGvhBEGfMk569",
+  },
+  {
+    cover: "mladi-solisti", title: "Koncert mladih solista", composer: "Luigi Boccherini", year: 2015, label: "Croatia Records",
+    with: ["Orkestar Gaudeamus", "Zlatan Srzić"],
+    work: {
+      hr: "Koncert za violončelo i orkestar u B-duru: Adagio",
+      en: "Cello Concerto in B-flat major: Adagio",
+      de: "Violoncellokonzert B-Dur: Adagio",
+    },
+    spotify: "0a83cnkjy2cCaKaIiY9aEc",
+  },
+  {
+    cover: "leskovar-svarc", title: "Monika Leskovar i Ivana Švarc", year: 2012, label: "Croatia Records",
+    with: ["Ivana Švarc-Grenda"],
+    work: {
+      hr: "Francœur: Sonata u E-duru · Paganini: Moses-fantazija · Hatz: Elegija i humoreska · Papandopulo: Rapsodia concertante · Brahms: Sonata u e-molu, op. 38",
+      en: "Francœur: Sonata in E major · Paganini: Moses Fantasy · Hatz: Elegy and Humoresque · Papandopulo: Rapsodia concertante · Brahms: Sonata in E minor, Op. 38",
+      de: "Francœur: Sonate E-Dur · Paganini: Moses-Fantasie · Hatz: Elegie und Humoreske · Papandopulo: Rapsodia concertante · Brahms: Sonate e-Moll op. 38",
+    },
+    spotify: "5k0bvVtu6Z3zsrkOhUSULA",
+  },
+  {
+    cover: "bottesini", title: "Bottesini: Capriccio di Bravura", composer: "Giovanni Bottesini", year: 2012, label: "Channel Classics",
+    with: ["Rick Stotijn", "Amsterdam Sinfonietta", "Candida Thompson"],
+    work: {
+      hr: "Duo concertant na teme iz Bellinijevih „Puritanaca“",
+      en: "Duo concertant on themes from Bellini’s “I Puritani”",
+      de: "Duo concertant über Themen aus Bellinis „I Puritani“",
+    },
+    spotify: "4WdcwcQTWCQDb6jzcn7442",
+  },
+  {
+    cover: "cello-music", title: "Celebrating Slava!", year: 2008, label: "Profil · Kronberg Academy",
+    with: ["David Geringas", "Giovanni Sollima", "Cellissimo"],
+    work: {
+      hr: "Kalsons: „Aluzija“ — u spomen Mstislavu Rostropoviču",
+      en: "Kalsons: “Aluzija” — in remembrance of Mstislav Rostropovich",
+      de: "Kalsons: „Aluzija“ — in Erinnerung an Mstislaw Rostropowitsch",
+    },
+    spotify: "0A0yD8bjc7Kk07nw4kk164",
+  },
+  {
+    cover: "we-were-trees", title: "We Were Trees", composer: "Giovanni Sollima", year: 2008, label: "Dedalo",
+    with: ["Giovanni Sollima", "Julian Kuerti"],
+    work: "Tree Raga Song",
+    spotify: "2bLm3zpPcAuuS7BnipOdf0",
+  },
+  {
+    cover: "stamitz", title: "Mon cher cousin", year: 2007, label: "Oehms Classics",
+    with: ["Münchner Rundfunkorchester", "Ulf Schirmer"],
+    work: {
+      hr: "Stamitz: Koncert za violončelo br. 1 u G-duru · Danzi: Varijacije na temu iz Mozartova „Don Giovannija“",
+      en: "Stamitz: Cello Concerto No. 1 in G major · Danzi: Variations on a theme from Mozart’s “Don Giovanni”",
+      de: "Stamitz: Violoncellokonzert Nr. 1 G-Dur · Danzi: Variationen über ein Thema aus Mozarts „Don Giovanni“",
+    },
+    spotify: "47xDboXbXHivGs4i0nzT6n",
+  },
+  {
+    cover: "alone", title: "Alone", year: 2000, label: "Tutico",
+    with: ["Ivana Švarc-Grenda"],
+    work: {
+      hr: "Stravinski: Talijanska suita · Prokofjev: Sonata u C-duru, op. 119 · Sollima: Alone · Martinů: Varijacije na Rossinijevu temu · Piazzolla: Le Grand Tango",
+      en: "Stravinsky: Suite italienne · Prokofiev: Sonata in C major, Op. 119 · Sollima: Alone · Martinů: Variations on a Theme of Rossini · Piazzolla: Le Grand Tango",
+      de: "Strawinsky: Suite italienne · Prokofjew: Sonate C-Dur op. 119 · Sollima: Alone · Martinů: Variationen über ein Thema von Rossini · Piazzolla: Le Grand Tango",
+    },
+    spotify: "4l6dtDLgmiiEDylyuFj3NB",
+  },
+];
+
 /* Galerija po serijama. [ime datoteke, širina, visina] — datoteke u assets/photos/{sm,lg}/, originali u assets/press/ */
 window.SERIES = {
   portraits: [
@@ -75,7 +196,7 @@ window.I18N = {
     "langnote": "Hrvatska verzija →",
     "nav.prelude": "Preludij",
     "meta.title": "Monika Leskovar — violončelistica",
-    "nav.bio": "Biografija", "nav.audio": "Slušaj", "nav.gallery": "Galerija", "nav.concerts": "Koncerti", "nav.contact": "Kontakt",
+    "nav.bio": "Biografija", "nav.audio": "Slušaj", "nav.disco": "Diskografija", "nav.gallery": "Galerija", "nav.concerts": "Koncerti", "nav.contact": "Kontakt",
     "nav.menu": "Program", "nav.close": "Zatvori",
     "intro.tuning": "Ugađanje",
     "hero.role": "Violončelistica",
@@ -95,6 +216,10 @@ window.I18N = {
     "audio.play": "Reproduciraj", "audio.pause": "Pauza",
     "audio.now": "Sada svira",
     "audio.ready": "Odaberi snimku",
+    "disco.label": "Diskografija",
+    "disco.title": "Albumi", "disco.all": "Svi albumi",
+    "disco.plays": "Monika svira", "disco.with": "Suradnici", "disco.works": "Skladbe",
+    "disco.listen": "Poslušaj album", "disco.buy": "Kupi CD", "disco.note": "Player se učitava sa Spotifyja tek kad ga pokreneš.",
     "gallery.label": "Galerija",
     "gallery.title": "Svjetlo <em>i sjena</em>",
     "gallery.all": "Sve", "gallery.portraits": "Portreti", "gallery.elements": "Elementi", "gallery.chiaroscuro": "Chiaroscuro", "gallery.stage": "Pozornica",
@@ -142,7 +267,7 @@ window.I18N = {
     "langnote": "English version →",
     "nav.prelude": "Prelude",
     "meta.title": "Monika Leskovar — Cellist",
-    "nav.bio": "Biography", "nav.audio": "Listen", "nav.gallery": "Gallery", "nav.concerts": "Concerts", "nav.contact": "Contact",
+    "nav.bio": "Biography", "nav.audio": "Listen", "nav.disco": "Discography", "nav.gallery": "Gallery", "nav.concerts": "Concerts", "nav.contact": "Contact",
     "nav.menu": "Programme", "nav.close": "Close",
     "intro.tuning": "Tuning",
     "hero.role": "Cellist",
@@ -162,6 +287,10 @@ window.I18N = {
     "audio.play": "Play", "audio.pause": "Pause",
     "audio.now": "Now playing",
     "audio.ready": "Choose a recording",
+    "disco.label": "Discography",
+    "disco.title": "Albums", "disco.all": "All albums",
+    "disco.plays": "Monika plays", "disco.with": "With", "disco.works": "Music by",
+    "disco.listen": "Listen to the album", "disco.buy": "Buy the CD", "disco.note": "The player loads from Spotify only once you start it.",
     "gallery.label": "Gallery",
     "gallery.title": "Light <em>and shadow</em>",
     "gallery.all": "All", "gallery.portraits": "Portraits", "gallery.elements": "Elements", "gallery.chiaroscuro": "Chiaroscuro", "gallery.stage": "Stage",
@@ -209,7 +338,7 @@ window.I18N = {
     "langnote": "Zur deutschen Version →",
     "nav.prelude": "Präludium",
     "meta.title": "Monika Leskovar — Cellistin",
-    "nav.bio": "Biografie", "nav.audio": "Hören", "nav.gallery": "Galerie", "nav.concerts": "Konzerte", "nav.contact": "Kontakt",
+    "nav.bio": "Biografie", "nav.audio": "Hören", "nav.disco": "Diskografie", "nav.gallery": "Galerie", "nav.concerts": "Konzerte", "nav.contact": "Kontakt",
     "nav.menu": "Programm", "nav.close": "Schließen",
     "intro.tuning": "Stimmen",
     "hero.role": "Cellistin",
@@ -229,6 +358,10 @@ window.I18N = {
     "audio.play": "Abspielen", "audio.pause": "Pause",
     "audio.now": "Es spielt",
     "audio.ready": "Aufnahme wählen",
+    "disco.label": "Diskografie",
+    "disco.title": "Alben", "disco.all": "Alle Alben",
+    "disco.plays": "Monika spielt", "disco.with": "Mit", "disco.works": "Werke von",
+    "disco.listen": "Album anhören", "disco.buy": "CD kaufen", "disco.note": "Der Player wird erst beim Start von Spotify geladen.",
     "gallery.label": "Galerie",
     "gallery.title": "Licht <em>und Schatten</em>",
     "gallery.all": "Alle", "gallery.portraits": "Porträts", "gallery.elements": "Elemente", "gallery.chiaroscuro": "Chiaroscuro", "gallery.stage": "Bühne",
